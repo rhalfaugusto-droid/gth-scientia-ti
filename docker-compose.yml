@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15
+    container_name: gth_db
+    restart: always
+    environment:
+      POSTGRES_USER: Rhalf
+      POSTGRES_PASSWORD: Rhalf@Augusto69#$%
+      POSTGRES_DB: gthdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  backend:
+    build: ./backend
+    container_name: gth_backend
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+  frontend:
+    build: ./frontend
+    container_name: gth_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    command: sh -c "npm run build && npx serve -s dist"
+
+volumes:
+  postgres_data:

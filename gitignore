@@ -1,0 +1,100 @@
+# ========================================
+# GTH – Scientia TI | .gitignore padrão
+# ========================================
+
+# 🧱 Node.js (Frontend / API JS)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ⚙️ Python (Backend / API FastAPI)
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+.env
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+
+# 🐳 Docker
+*.pid
+*.seed
+*.pid.lock
+*.log
+docker-compose.override.yml
+.dockerignore
+
+# 🔐 Configurações e credenciais
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+*.env
+
+# 🧰 IDEs e editores
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+.DS_Store
+Thumbs.db
+
+# 🖼️ Build / distribuição
+dist/
+build/
+*.bak
+*.tmp
+*.swp
+*.swo
+*.orig
+coverage/
+reports/
+*.spec
+
+# 📦 Pacotes e caches
+*.egg
+*.egg-info/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+wheels/
+share/python-wheels/
+.manifest
+.installed.cfg
+__pypackages__/
+
+# 🧪 Testes e CI
+.coverage
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.cache
+pytest_cache/
+.tox/
+.mypy_cache/
+.pytest_cache/
+.pyre/
+
+# 🧩 Logs e relatórios
+*.log
+logs/
+*.out
+
+# 🧾 Documentação temporária
+*.pdf
+*.pptx
+*.docx
+~$*
+
+# 🚀 Sistema de implantação (Render)
+render.yaml
