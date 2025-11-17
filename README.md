@@ -29,3 +29,4 @@ Projeto scaffold para MVP da plataforma **Governança Tributária Híbrida**.
 ## Useful commands
 - Run migrations: `./make_migrations.sh "message"`
 - Run tests: `pytest -v` (backend)
+"# gth-scientia-ti" 
