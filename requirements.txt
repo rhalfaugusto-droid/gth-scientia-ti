@@ -8,3 +8,4 @@ passlib[bcrypt]
 pydantic
 python-dotenv
 databases[postgresql]
+xmltodict
