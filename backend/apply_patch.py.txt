@@ -1,0 +1,97 @@
+﻿#!/usr/bin/env python3
+"""
+apply_patch.py
+Uso:
+    python apply_patch.py --zip meu_backend.zip --out patched_backend.zip
+O que faz:
+- Extrai o ZIP em uma pasta temporária
+- Procura por arquivos .py que contenham padrões problemáticos (atribuições literais de senhas, uso de SECRET_KEY como senha, chamadas de pwd_context.hash com variáveis longas)
+- Altera:
+    * Literais como ADMIN_PASSWORD = "..." -> ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "Admin@2024!")
+    * SECRET_KEY = "..." -> SECRET_KEY = os.getenv("SECRET_KEY", "change-me")
+    * pwd_context.hash(os.getenv("X")) -> pwd_context.hash((os.getenv("X") or "")[:72])
+    * pwd_context.hash(SECRET_KEY) -> pwd_context.hash((SECRET_KEY or "")[:72])
+    * create_superuser(... password="...") -> create_superuser(... password=os.getenv("ADMIN_PASSWORD", "Admin@2024!"))
+- Reempacota tudo numa ZIP de saída
+"""
+import argparse, zipfile, tempfile, shutil, os, re, sys
+from pathlib import Path
+
+def patch_file(path: Path):
+    text = path.read_text(encoding='utf-8', errors='ignore')
+    orig = text
+
+    changed = False
+    # ensure import os at top if required
+    if re.search(r'(?i)(ADMIN_PASSWORD|SECRET_KEY)\s*=', text):
+        if 'import os' not in text.splitlines()[:10]:
+            text = "import os\n" + text
+            changed = True
+
+    # convert password literal assignments to env-get
+    text, n1 = re.subn(r'(?m)^(?P<var>(?:ADMIN_PASSWORD|INITIAL_PASSWORD|DEFAULT_PASSWORD|SUPERUSER_PASSWORD))\s*=\s*(?P<val>["\'].*?["\'])',
+                       r'\g<var> = os.getenv("\g<var>", "Admin@2024!")', text)
+    if n1: changed = True
+
+    # convert SECRET_KEY literal to env-get
+    text, n2 = re.subn(r'(?m)^SECRET_KEY\s*=\s*(["\'].*?["\'])', 'SECRET_KEY = os.getenv("SECRET_KEY", "change-me")', text)
+    if n2: changed = True
+
+    # Truncate getenv in pwd_context.hash calls
+    text, n3 = re.subn(r'pwd_context\.hash\(\s*os\.getenv\(\s*["\']([^"\']+)["\']\s*\)\s*\)',
+                       r'pwd_context.hash((os.getenv("\1") or "")[:72])', text)
+    if n3: changed = True
+
+    # Truncate direct SECRET_KEY usage in hash
+    text, n4 = re.subn(r'pwd_context\.hash\(\s*SECRET_KEY\s*\)', r'pwd_context.hash((SECRET_KEY or "")[:72])', text)
+    if n4: changed = True
+
+    # Replace create_superuser(... password="...") occurrences to use env var
+    text, n5 = re.subn(r'create_superuser\(\s*(.*?)password\s*=\s*(["\'].*?["\'])(.*?)\)', r'create_superuser(\1password=os.getenv("ADMIN_PASSWORD","Admin@2024!")\3)', text, flags=re.IGNORECASE|re.S)
+    if n5: changed = True
+
+    if changed and text != orig:
+        path.write_text(text, encoding='utf-8')
+    return changed
+
+def main(zip_in, zip_out):
+    tmp = Path(tempfile.mkdtemp(prefix="backend_patch_"))
+    try:
+        with zipfile.ZipFile(zip_in, 'r') as z:
+            z.extractall(tmp)
+        # find backend directory (prefer folder named backend)
+        backend_root = None
+        if (tmp / "backend").exists():
+            backend_root = tmp / "backend"
+        else:
+            # fallback: folder that contains many .py files
+            for p in tmp.rglob('*'):
+                if p.is_dir():
+                    pycount = sum(1 for _ in p.rglob('*.py'))
+                    if pycount > 3:
+                        backend_root = p
+                        break
+        if backend_root is None:
+            print("Não foi possível localizar a pasta do backend automaticamente. Ajuste manualmente.", file=sys.stderr)
+            sys.exit(1)
+        # Walk and patch .py files
+        patched_files = []
+        for py in backend_root.rglob('*.py'):
+            if patch_file(py):
+                patched_files.append(str(py.relative_to(tmp)))
+        # create new zip
+        with zipfile.ZipFile(zip_out, 'w', zipfile.ZIP_DEFLATED) as zout:
+            for f in tmp.rglob('*'):
+                if f.is_file():
+                    zout.write(f, f.relative_to(tmp))
+        print("Patch aplicado. Arquivos alterados:", patched_files)
+        print("ZIP criado:", zip_out)
+    finally:
+        shutil.rmtree(tmp)
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--zip', required=True, help='ZIP de entrada (o que você enviou)')
+    parser.add_argument('--out', required=True, help='ZIP de saída com backend patchado')
+    args = parser.parse_args()
+    main(args.zip, args.out)
