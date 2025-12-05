@@ -1,27 +1,41 @@
-
 version: '3.8'
+
 services:
   backend:
     build: ./backend
+    container_name: gth_backend
     ports:
       - "4000:4000"
     environment:
-      - DATABASE_URL=postgres://postgres:postgres@db:5432/tributario
+      # URL usada pelo FastAPI / SQLAlchemy
+      - DATABASE_URL=postgresql://admin:admin@db:5432/gth_db
+      - OPENAI_API_KEY=${OPENAI_API_KEY}   # IA incluída
     depends_on:
       - db
+    restart: always
+
   frontend:
     build: ./frontend
+    container_name: gth_frontend
     ports:
       - "3000:80"
     depends_on:
       - backend
+    restart: always
+
   db:
     image: postgres:14
+    container_name: gth_database
     environment:
-      - POSTGRES_PASSWORD=postgres
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: gth_db
     ports:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    restart: always
+
 volumes:
   db_data:
+
