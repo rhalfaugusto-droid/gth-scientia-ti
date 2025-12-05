@@ -43,3 +43,4 @@ Este repositório é um *starter full* para acelerar o desenvolvimento e deploy 
 5. Configure variáveis de ambiente no Render (DATABASE_URL, JWT_SECRET, OPENAI_KEY...).
 
 Mais detalhes no SECURITY.md e DEVOPS.md.
+# gth-scientia-ti
