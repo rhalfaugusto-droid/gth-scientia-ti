@@ -1,0 +1,18 @@
+
+services:
+  - type: web
+    name: tributario-backend
+    env: docker
+    repo: https://github.com/your-org/your-repo
+    branch: main
+    dockerfilePath: backend/Dockerfile
+    plan: starter
+  - type: static
+    name: tributario-frontend
+    env: docker
+    repo: https://github.com/your-org/your-repo
+    branch: main
+    dockerfilePath: frontend/Dockerfile
+databases:
+  - name: tributario-db
+    plan: starter
