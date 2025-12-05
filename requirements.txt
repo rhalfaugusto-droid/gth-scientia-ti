@@ -1,8 +1,4 @@
 fastapi
 uvicorn
-python-multipart
-jinja2
-pydantic
-requests
-httpx
 openai
+python-dotenv
