@@ -1,20 +1,23 @@
-import React, {useState} from 'react'
-import axios from 'axios'
+import React from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Login from './pages/Login'
+import CadastroEmpresa from './pages/CadastroEmpresa'
+import CadastroTributario from './pages/CadastroTributario'
+import Workspace from './pages/Workspace'
+import Builder from './pages/Builder'
+import Nav from './components/Nav'
 
 export default function App(){
-  const [file, setFile] = useState(null)
-  const [text, setText] = useState('')
-  const upload = async () => {
-    if(!file) return alert('select file')
-    const fd = new FormData()
-    fd.append('file', file)
-    const r = await axios.post('/docs/upload', fd, { headers: {'Content-Type':'multipart/form-data'} })
-    setText(r.data.text || 'no text')
-  }
-  return (<div style={{padding:20,fontFamily:'Arial'}}>
-    <h1>GTH - Upload OCR</h1>
-    <input type="file" onChange={e=>setFile(e.target.files[0])} />
-    <button onClick={upload}>Upload</button>
-    <pre>{text}</pre>
-  </div>)
+  return (
+    <BrowserRouter>
+      <Nav />
+      <Routes>
+        <Route path='/' element={<Login/>} />
+        <Route path='/cadastro-empresa' element={<CadastroEmpresa/>} />
+        <Route path='/cadastro-tributario' element={<CadastroTributario/>} />
+        <Route path='/workspace' element={<Workspace/>} />
+        <Route path='/builder' element={<Builder/>} />
+      </Routes>
+    </BrowserRouter>
+  )
 }

@@ -1,1 +1,4 @@
-body { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
+:root{--bg:#f7fafc;--card:#fff}
+body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:#111}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+button{cursor:pointer}
