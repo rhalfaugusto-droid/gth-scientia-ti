@@ -1,36 +1,116 @@
-import React, {useState} from 'react'
-import { DndProvider, useDrag, useDrop } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import React, { useState } from "react";
+import { DndProvider, useDrag, useDrop } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
-const ItemType = 'STEP'
+const ItemType = "STEP";
 
-function Step({name}){
-  const [{isDragging}, drag] = useDrag(()=>({type:ItemType, item:{name}}),[name])
-  return <div ref={drag} style={{padding:8,background:'#fff',borderRadius:6,boxShadow:'0 1px 3px rgba(0,0,0,0.1)',opacity:isDragging?0.5:1}}>{name}</div>
+/* ---------- STEP ---------- */
+function Step({ name }) {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: ItemType,
+    item: { name },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }));
+
+  return (
+    <motion.div
+      ref={drag}
+      whileHover={{ scale: 1.02 }}
+      className={`card cursor-move ${isDragging ? "opacity-50" : ""}`}
+    >
+      {name}
+    </motion.div>
+  );
 }
 
-function Canvas({flow,setFlow}){
-  const [, drop] = useDrop(()=>({accept:ItemType, drop:(item)=> setFlow([...flow, item.name])}),[flow])
-  return <div ref={drop} style={{minHeight:300,background:'#f8fafc',padding:12,borderRadius:6}}>
-    {flow.map((s,i)=> <div key={i} style={{padding:8,background:'#fff',marginTop:8,borderRadius:6}}>{i+1}. {s}</div>)}
-  </div>
+/* ---------- CANVAS ---------- */
+function Canvas({ flow, setFlow }) {
+  const [, drop] = useDrop(() => ({
+    accept: ItemType,
+    drop: (item) => setFlow((prev) => [...prev, item.name]),
+  }));
+
+  return (
+    <div
+      ref={drop}
+      className="p-4 bg-slate-50 rounded min-h-[300px] border border-dashed"
+    >
+      {flow.length === 0 && (
+        <p className="text-slate-400">Arraste etapas para montar o fluxo</p>
+      )}
+
+      {flow.map((s, i) => (
+        <div key={i} className="card mt-2">
+          {i + 1}. {s}
+        </div>
+      ))}
+    </div>
+  );
 }
 
-export default function Builder(){
-  const steps=['Importar Nota','Validar XML','Classificar Tributação','Calcular Imposto','Gerar Relatório','Enviar para Contabilidade']
-  const [flow,setFlow]=useState([])
+/* ---------- BUILDER ---------- */
+export default function Builder() {
+  const steps = [
+    "Importar Nota",
+    "Validar XML",
+    "Classificar Tributação",
+    "Calcular Imposto",
+    "Gerar Relatório",
+    "Enviar para Contabilidade",
+  ];
+
+  const [flow, setFlow] = useState([]);
+  const navigate = useNavigate();
+
   return (
     <DndProvider backend={HTML5Backend}>
-      <div style={{display:'flex',height:'90vh'}}>
-        <aside style={{width:280,padding:12,background:'#f1f5f9'}}>
-          <h3>Ações</h3>
-          {steps.map(s=> <div key={s} style={{marginTop:8}}><Step name={s} /></div>)}
-        </aside>
-        <main style={{flex:1,padding:20}}>
-          <h2>Montagem de Fluxo</h2>
-          <Canvas flow={flow} setFlow={setFlow} />
-        </main>
+      <div className="container py-6">
+        <div className="grid grid-cols-3 gap-6">
+          {/* LATERAL */}
+          <aside className="col-span-1">
+            <h3 className="mb-3 font-semibold">Ações</h3>
+            <div className="space-y-2">
+              {steps.map((s) => (
+                <Step key={s} name={s} />
+              ))}
+            </div>
+          </aside>
+
+          {/* ÁREA PRINCIPAL */}
+          <main className="col-span-2">
+            <h2 className="mb-3 font-semibold">Montagem de Fluxo</h2>
+
+            <Canvas flow={flow} setFlow={setFlow} />
+
+            {/* BOTÕES */}
+            <div className="flex gap-3 mt-6">
+              <button
+                className="bg-cyan-600 hover:bg-cyan-700 text-white px-5 py-2 rounded-lg text-sm font-medium"
+                onClick={() => {
+                  if (flow.length === 0) {
+                    alert("Monte ao menos uma etapa do fluxo.");
+                    return;
+                  }
+                  navigate("/builder/workflow", { state: { flow } });
+                }}
+              >
+                Concluir
+              </button>
+
+              <button
+                className="bg-white border border-slate-300 hover:bg-slate-50 px-5 py-2 rounded-lg text-sm"
+                onClick={() => setFlow([])}
+              >
+                Limpar
+              </button>
+            </div>
+          </main>
+        </div>
       </div>
     </DndProvider>
-  )
+  );
 }

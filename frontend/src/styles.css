@@ -1,4 +1,47 @@
-:root{--bg:#f7fafc;--card:#fff}
-body{margin:0;font-family:Inter,Arial,sans-serif;background:var(--bg);color:#111}
-.container{max-width:1200px;margin:0 auto;padding:20px}
-button{cursor:pointer}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Variáveis globais */
+:root {
+  --bg: #0f172a;
+  --accent: #06b6d4;
+}
+
+/* Base */
+body {
+  @apply bg-slate-50 text-slate-800;
+}
+
+/* CONTAINER CENTRALIZADO (CRÍTICO) */
+.container {
+  max-width: 1280px;     /* largura máxima */
+  margin-left: auto;    /* centraliza */
+  margin-right: auto;   /* centraliza */
+  padding-left: 24px;   /* margem interna */
+  padding-right: 24px;
+}
+
+/* Cards */
+.card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  padding: 12px;
+}
+
+/* Botões do toolbox */
+.tool-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+}
+
+.tool-button:hover {
+  background: #f8fafc;
+}
