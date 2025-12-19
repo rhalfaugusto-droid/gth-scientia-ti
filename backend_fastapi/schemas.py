@@ -8,7 +8,7 @@ class UserOut(BaseModel):
     name: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class CompanyOut(BaseModel):
     id: int
@@ -16,14 +16,14 @@ class CompanyOut(BaseModel):
     cnpj: Optional[str] = None
     area: Optional[str] = None
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class RuleOut(BaseModel):
     id: int
     name: str
     description: Optional[str] = None
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class RuleVersionOut(BaseModel):
     id: int
@@ -31,7 +31,7 @@ class RuleVersionOut(BaseModel):
     version: str
     content: dict
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 from datetime import datetime
 
@@ -49,7 +49,7 @@ class TaxRateIn(TaxRateBase):
 class TaxRateOut(TaxRateBase):
     id: int
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class TaxRegimeBase(BaseModel):
     name: str
@@ -62,4 +62,12 @@ class TaxRegimeIn(TaxRegimeBase):
 class TaxRegimeOut(TaxRegimeBase):
     id: int
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+@app.get("/")
+def root():
+    return {"status": "ok"}
+
+@app.get("/health")
+def health():
+    return {"status": "healthy"}
