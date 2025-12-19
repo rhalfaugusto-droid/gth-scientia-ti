@@ -1,3 +1,12 @@
+
+from fastapi import APIRouter
+
+router = APIRouter(prefix="/auth", tags=["Autenticação"])
+
+@router.post("/login")
+def login(data: dict):
+    return {"message": "Login realizado", "data": data}
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -41,3 +50,4 @@ def register(data: RegisterIn, db: Session = Depends(database.get_db)):
         raise HTTPException(status_code=400, detail='Usuário já existe')
     user = crud.create_user(db, data.email, data.password, data.name)
     return user
+ (Initial FastAPI backend setup)

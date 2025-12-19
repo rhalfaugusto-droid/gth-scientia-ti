@@ -1,10 +1,77 @@
+# ======================
+# Python
+# ======================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
 
-node_modules
-dist
+# ======================
+# Virtual Environments
+# ======================
+.venv/
+venv/
+ENV/
+env/
+
+# ======================
+# Poetry
+# ======================
+poetry.lock
+# (descomente a linha acima SE você NÃO quiser versionar o lockfile)
+# por padrão, RECOMENDA-SE versionar o poetry.lock
+
+# ======================
+# Environment Variables
+# ======================
 .env
-.env.local
-.vscode
+.env.*
+!.env.example
+
+# ======================
+# Logs & Runtime
+# ======================
+*.log
+uvicorn.log
+
+# ======================
+# OS / Editor
+# ======================
 .DS_Store
-/migrations/*.sql
-/build
-/*.zip
+Thumbs.db
+desktop.ini
+
+# ======================
+# IDEs
+# ======================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ======================
+# Tests / Coverage
+# ======================
+.coverage
+htmlcov/
+.pytest_cache/
+
+# ======================
+# Build / Distribution
+# ======================
+build/
+dist/
+
+# ======================
+# SQLite / Local DB
+# ======================
+*.sqlite3
+*.db
+
+# ======================
+# FastAPI / Misc
+# ======================
+.cache/

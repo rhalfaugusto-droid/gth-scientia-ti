@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 import ast, operator as op
 from datetime import datetime
-from ..services.tax_service import calculate_tax
+from services.tax_service import calculate_tax
 from dependencies import get_current_user
 from sqlalchemy.orm import Session
 import database, crud

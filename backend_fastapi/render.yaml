@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: gth-backend
+    env: python
+    plan: starter
+    branch: main
+
+    rootDir: backend_fastapi
+
+    buildCommand: |
+      python -V
+      poetry install --no-interaction --no-root
+
+    startCommand: poetry run uvicorn main:app --host 0.0.0.0 --port $PORT
+
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9

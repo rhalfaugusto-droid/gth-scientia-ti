@@ -2,8 +2,8 @@ from fastapi import APIRouter, File, UploadFile, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import Dict, Any
 from datetime import datetime
-from ..services.xml_parser_service import parse_nfe_xml
-from ..services.tax_service import calculate_tax
+from services.xml_parser_service import parse_nfe_xml
+from services.tax_service import calculate_tax
 from dependencies import get_current_user
 import database
 

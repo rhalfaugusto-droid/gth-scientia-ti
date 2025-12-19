@@ -1,0 +1,48 @@
+
+openapi: 3.0.1
+info:
+  title: Plataforma Tributária - API
+  version: "0.1.0"
+servers:
+  - url: http://localhost:4000
+paths:
+  /api/v1/auth/login:
+    post:
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: OK
+  /api/v1/companies:
+    post:
+      summary: Criar empresa
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyCreate'
+      responses:
+        '201':
+          description: Created
+components:
+  schemas:
+    CompanyCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        cnpj:
+          type: string
+        regime:
+          type: string

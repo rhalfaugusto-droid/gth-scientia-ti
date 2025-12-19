@@ -1,6 +1,6 @@
 from fastapi import APIRouter, File, UploadFile, Depends, HTTPException
 from typing import Dict, Any
-from ..services.xml_parser_service import parse_nfe_xml
+from services.xml_parser_service import parse_nfe_xml
 from dependencies import get_current_user
 
 router = APIRouter()

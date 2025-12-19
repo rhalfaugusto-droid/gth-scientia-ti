@@ -1,9 +1,13 @@
 fastapi
 uvicorn[standard]
+
+openai
+
 sqlalchemy==1.4.52
 alembic
 pydantic
 passlib[bcrypt]
 python-jose[cryptography]
 python-multipart
+ (Initial FastAPI backend setup)
 python-dotenv
