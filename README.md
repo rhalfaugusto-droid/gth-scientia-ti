@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 # Plataforma de Governança Tributária Híbrida — Starter (Option D)
 
@@ -45,7 +44,7 @@ Este repositório é um *starter full* para acelerar o desenvolvimento e deploy 
 
 Mais detalhes no SECURITY.md e DEVOPS.md.
 # gth-scientia-ti
-=======
+
 # gth-scientia-ti
 Plataforma de Governança Tributária Híbrida pra a transição ao novo modelo do IBS e CBS (2026–2033).
->>>>>>> 8062e816b42b3c7d7253aa18496fe376fe681f6f
+

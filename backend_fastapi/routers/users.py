@@ -21,4 +21,4 @@ def me(current = Depends(get_current_user)):
 @router.get('/', response_model=list[schemas.UserOut])
 def list_users(db: Session = Depends(database.get_db)):
     return crud.get_users(db)
- (Initial FastAPI backend setup)
+

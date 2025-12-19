@@ -1,4 +1,3 @@
-
 # Plataforma de Governança Tributária Híbrida — Starter (Option D)
 
 Este repositório é um *starter full* para acelerar o desenvolvimento e deploy no GitHub + Render.
@@ -84,4 +83,4 @@ Notes
 -----
 - This is a POC scaffold: extend models, add migrations, and secure secrets before production.
 - The rule engine is intentionally simple for POC. For production, consider a DSL or sandboxed evaluator.
-(Initial FastAPI backend setup)
+

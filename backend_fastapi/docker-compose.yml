@@ -1,6 +1,4 @@
 version: '3.8'
-
-
 services:
   backend:
     build: ./backend
@@ -49,4 +47,3 @@ services:
     environment:
       - DATABASE_URL=sqlite:///./gth_db.sqlite
       - SECRET_KEY=dev_secret_change
-(Initial FastAPI backend setup)
