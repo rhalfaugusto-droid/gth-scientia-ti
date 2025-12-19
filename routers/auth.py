@@ -50,4 +50,4 @@ def register(data: RegisterIn, db: Session = Depends(database.get_db)):
         raise HTTPException(status_code=400, detail='Usuário já existe')
     user = crud.create_user(db, data.email, data.password, data.name)
     return user
- (Initial FastAPI backend setup)
+#(Initial FastAPI backend setup)

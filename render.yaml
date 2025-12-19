@@ -1,18 +1,18 @@
-
 services:
   - type: web
-    name: tributario-backend
-    env: docker
-    repo: https://github.com/your-org/your-repo
-    branch: main
-    dockerfilePath: backend/Dockerfile
+    name: gth-backend
+    env: python
     plan: starter
-  - type: static
-    name: tributario-frontend
-    env: docker
-    repo: https://github.com/your-org/your-repo
     branch: main
-    dockerfilePath: frontend/Dockerfile
-databases:
-  - name: tributario-db
-    plan: starter
+
+    rootDir: backend_fastapi
+
+    buildCommand: |
+      python -V
+      poetry install --no-interaction --no-root
+
+    startCommand: poetry run uvicorn main:app --host 0.0.0.0 --port $PORT
+
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
