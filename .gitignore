@@ -1,14 +1,22 @@
 # ======================
+# Node / Frontend
+# ======================
+node_modules/
+.vite/
+dist/
+
+# ======================
 # Python
 # ======================
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
+*.pyc
 *.so
 *.egg-info/
 .eggs/
-
+.venv/
 # ======================
 # Virtual Environments
 # ======================
@@ -29,6 +37,8 @@ poetry.lock
 # ======================
 .env
 .env.*
+.env.local
+.vscode/
 !.env.example
 
 # ======================
