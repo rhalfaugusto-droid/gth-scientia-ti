@@ -2,7 +2,7 @@ services:
   - type: web
     name: gth-backend
     env: python
-    plan: starter
+    plan: free
     branch: main
 
     rootDir: backend_fastapi
