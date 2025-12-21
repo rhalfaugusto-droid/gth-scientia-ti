@@ -1,9 +1,13 @@
 # =========================
-# Frontend / Node
+# Frontend / Node / Vite
 # =========================
-node_modules
-dist
-/build
+node_modules/
+frontend/node_modules/
+frontend/node_modules/.vite/
+dist/
+frontend/dist/
+build/
+.vite/
 
 # =========================
 # Python
@@ -12,40 +16,65 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+*.so
+*.egg-info/
+.eggs/
+.cache/
+
+# =========================
+# Virtual Environments
+# =========================
+.venv/
+venv/
+ENV/
+env/
+
+# =========================
+# Poetry
+# =========================
+# Recomendado versionar o poetry.lock
+# Descomente se NÃO quiser versionar
+# poetry.lock
+
+# =========================
+# Environment Variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Tests / Coverage
+# =========================
 .pytest_cache/
 .coverage
 htmlcov/
 
 # =========================
-# Poetry / Virtualenv
+# Logs
 # =========================
-.poetry/
-.venv/
+*.log
+uvicorn.log
 
 # =========================
-# Environment
-# =========================
-.env
-.env.local
-
-# =========================
-# Editor / IDE
-# =========================
-.vscode
-
-# =========================
-# OS
+# OS / Editor / IDE
 # =========================
 .DS_Store
 Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*.swo
 
 # =========================
 # Database / Migrations
 # =========================
 /migrations/*.sql
+*.sqlite3
+*.db
 
 # =========================
 # Artifacts
 # =========================
 *.zip
-*.log
