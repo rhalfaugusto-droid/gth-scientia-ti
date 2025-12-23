@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ======================
 # Node / Frontend
 # ======================
@@ -20,11 +21,40 @@ __pycache__/
 # ======================
 # Virtual Environments
 # ======================
+=======
+# =========================
+# Frontend / Node / Vite
+# =========================
+node_modules/
+frontend/node_modules/
+frontend/node_modules/.vite/
+dist/
+frontend/dist/
+build/
+.vite/
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+.cache/
+
+# =========================
+# Virtual Environments
+# =========================
+>>>>>>> b4426ebe9640815e7e2839567f7f8258e97ac4b2
 .venv/
 venv/
 ENV/
 env/
 
+<<<<<<< HEAD
 # ======================
 # Poetry
 # ======================
@@ -59,11 +89,47 @@ desktop.ini
 # ======================
 # IDEs
 # ======================
+=======
+# =========================
+# Poetry
+# =========================
+# Recomendado versionar o poetry.lock
+# Descomente se NÃO quiser versionar
+# poetry.lock
+
+# =========================
+# Environment Variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Tests / Coverage
+# =========================
+.pytest_cache/
+.coverage
+htmlcov/
+
+# =========================
+# Logs
+# =========================
+*.log
+uvicorn.log
+
+# =========================
+# OS / Editor / IDE
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+>>>>>>> b4426ebe9640815e7e2839567f7f8258e97ac4b2
 .vscode/
 .idea/
 *.swp
 *.swo
 
+<<<<<<< HEAD
 # ======================
 # Tests / Coverage
 # ======================
@@ -87,3 +153,16 @@ dist/
 # FastAPI / Misc
 # ======================
 .cache/
+=======
+# =========================
+# Database / Migrations
+# =========================
+/migrations/*.sql
+*.sqlite3
+*.db
+
+# =========================
+# Artifacts
+# =========================
+*.zip
+>>>>>>> b4426ebe9640815e7e2839567f7f8258e97ac4b2
