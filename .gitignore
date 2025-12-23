@@ -29,6 +29,8 @@ env/
 # Poetry
 # ======================
 poetry.lock
+.poetry/
+
 # (descomente a linha acima SE você NÃO quiser versionar o lockfile)
 # por padrão, RECOMENDA-SE versionar o poetry.lock
 
