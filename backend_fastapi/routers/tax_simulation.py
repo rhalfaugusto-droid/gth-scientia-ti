@@ -1,105 +1,52 @@
-from fastapi import APIRouter, File, UploadFile, Depends, HTTPException
-from typing import Dict, Any
-from datetime import datetime
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from typing import Literal
 
-# === IMPORTS DO MVP (SIMPLIFICADO) ===
-from services.tax_engine import SimplesNacionalEngine, TaxInput
+router = APIRouter(tags=["Simulação Tributária"])
 
-# === IMPORTS AVANÇADOS (XML / FUTURO) ===
-from sqlalchemy.orm import Session
-from services.xml_parser_service import parse_nfe_xml
-from services.tax_service import calculate_tax
-from dependencies import get_current_user
-import database
+# ======================================================
+# MODELO DE ENTRADA (MVP)
+# ======================================================
 
-router = APIRouter(prefix="/simulation", tags=["Simulação Tributária"])
+class SimplesInput(BaseModel):
+    faturamento_mensal: float
+    anexo: Literal["I", "II", "III", "IV", "V"]
+    uf: str
 
-# ==========================================================
-# MVP — SIMULAÇÃO SIMPLES NACIONAL (USAR AGORA)
-# ==========================================================
+# ======================================================
+# ENDPOINT MVP — SIMPLES NACIONAL
+# ======================================================
 
-engine = SimplesNacionalEngine()
-
-@router.post(
-    "/simples",
-    summary="Simula tributação pelo Simples Nacional (MVP)",
-    description="Calcula Anexo, Fator R, alíquota efetiva e DAS estimado"
-)
-def simular_simples(data: TaxInput):
+@router.post("/simples", summary="Simulação tributária Simples Nacional (MVP)")
+def simular_simples(data: SimplesInput):
     """
-    Endpoint MVP — NÃO usa XML, NÃO usa banco, NÃO exige autenticação.
-    Ideal para frontend, IA e venda do produto.
+    MVP tributário:
+    - NÃO usa XML
+    - NÃO consulta SEFAZ
+    - NÃO substitui contador
     """
-    try:
-        return engine.calcular(data)
-    except Exception as e:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Erro na simulação do Simples Nacional: {str(e)}"
-        )
 
+    if data.faturamento_mensal <= 0:
+        raise HTTPException(status_code=400, detail="Faturamento inválido")
 
-# ==========================================================
-# EXPERIMENTAL — SIMULAÇÃO VIA XML (DESATIVADO NO MVP)
-# ==========================================================
-# ⚠ Este endpoint é avançado e NÃO deve ser usado no MVP inicial
-# ⚠ Mantido apenas para evolução futura do produto
+    # Regra simplificada (exemplo realista)
+    aliquotas = {
+        "I": 0.06,
+        "II": 0.112,
+        "III": 0.135,
+        "IV": 0.165,
+        "V": 0.19,
+    }
 
-@router.post(
-    "/simulate_nfe",
-    summary="(Experimental) Simula cálculo tributário via XML de NFe",
-    include_in_schema=False  # Oculta do Swagger por enquanto
-)
-async def simulate_nfe_tax(
-    file: UploadFile = File(...),
-    db: Session = Depends(database.get_db),
-    current = Depends(get_current_user)
-) -> Dict[str, Any]:
+    aliquota = aliquotas[data.anexo]
+    das_estimado = data.faturamento_mensal * aliquota
 
-    if file.content_type not in ['application/xml', 'text/xml']:
-        raise HTTPException(
-            status_code=400,
-            detail="Tipo de arquivo inválido. Envie um XML de NFe."
-        )
-
-    try:
-        xml_content = await file.read()
-        xml_str = xml_content.decode('utf-8')
-
-        parsed_data = parse_nfe_xml(xml_str)
-        if not parsed_data:
-            raise HTTPException(
-                status_code=400,
-                detail="XML inválido ou não reconhecido como NFe."
-            )
-
-        operation_value = parsed_data['totais']['vProd']
-        date_str = parsed_data['data_emissao'][:10]
-        operation_date = datetime.strptime(date_str, '%Y-%m-%d')
-
-        tax_regime_name = 'REGIME_GERAL_IVA_PLENO'
-
-        simulation_result = calculate_tax(
-            db=db,
-            base_value=operation_value,
-            regime_name=tax_regime_name,
-            operation_date=operation_date
-        )
-
-        return {
-            "status": "success",
-            "nfe": {
-                "chave_acesso": parsed_data['chave_acesso'],
-                "data_emissao": parsed_data['data_emissao'],
-                "valor_total": operation_value,
-                "emitente_uf": parsed_data['emitente']['UF'],
-                "destinatario_uf": parsed_data['destinatario']['UF'],
-            },
-            "simulation": simulation_result
-        }
-
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Erro interno na simulação via XML: {str(e)}"
-        )
+    return {
+        "regime": "Simples Nacional",
+        "anexo": data.anexo,
+        "uf": data.uf,
+        "faturamento_mensal": data.faturamento_mensal,
+        "aliquota_estimada": aliquota,
+        "das_estimado": round(das_estimado, 2),
+        "observacao": "Simulação estimada. Não substitui apuração contábil oficial."
+    }
