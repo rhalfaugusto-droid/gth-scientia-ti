@@ -48,8 +48,8 @@ Mais detalhes no SECURITY.md e DEVOPS.md.
 # gth-scientia-ti
 Plataforma de Governança Tributária Híbrida pra a transição ao novo modelo do IBS e CBS (2026–2033).
 
-<<<<<<< HEAD
-=======
+
+
 
 GTH Scientia TI - FastAPI backend scaffold (POC)
 ------------------------------------------------
@@ -86,5 +86,4 @@ Notes
 -----
 - This is a POC scaffold: extend models, add migrations, and secure secrets before production.
 - The rule engine is intentionally simple for POC. For production, consider a DSL or sandboxed evaluator.
-(Initial FastAPI backend setup)
->>>>>>> b4426ebe9640815e7e2839567f7f8258e97ac4b2
+
