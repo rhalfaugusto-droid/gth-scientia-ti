@@ -1,8 +1,5 @@
 fastapi
 uvicorn[standard]
-
-openai
-
 sqlalchemy==1.4.52
 alembic
 pydantic
