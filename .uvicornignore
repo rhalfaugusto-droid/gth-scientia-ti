@@ -1,0 +1,7 @@
+node_modules
+frontend
+legacy
+migrations
+__pycache__
+.pytest_cache
+.git
