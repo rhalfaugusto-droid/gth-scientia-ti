@@ -4,7 +4,12 @@ from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from jose import jwt
 from passlib.context import CryptContext
-import models, schemas, database, crud, os
+from backend_fastapi.services.xml_parser_service import parse_nfe_xml
+from backend_fastapi.services.tax_service import calculate_tax
+from backend_fastapi.dependencies import get_current_user
+import os
+from backend_fastapi import database, models, schemas, crud
+
 
 router = APIRouter()
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')

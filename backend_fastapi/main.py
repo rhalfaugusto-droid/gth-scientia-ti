@@ -1,17 +1,16 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routers import (
-    auth,
-    users,
-    companies,
-    rules,
-    engine,
-    admin,
-    xml_parser,
-    tax_simulation,
-    workflows,
-)
+from backend_fastapi.routers.auth import router as auth_router
+from backend_fastapi.routers.users import router as users_router
+from backend_fastapi.routers.companies import router as companies_router
+from backend_fastapi.routers.rules import router as rules_router
+from backend_fastapi.routers.engine import router as engine_router
+from backend_fastapi.routers.admin import router as admin_router
+from backend_fastapi.routers.xml_parser import router as parser_router
+from backend_fastapi.routers.tax_simulation import router as simulation_router
+from backend_fastapi.routers.workflows import router as workflows_router
+
 
 app = FastAPI(title="GTH FastAPI Backend POC")
 
@@ -22,18 +21,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(auth.router, prefix="/auth", tags=["auth"])
-app.include_router(users.router, prefix="/users", tags=["users"])
-app.include_router(companies.router, prefix="/companies", tags=["companies"])
-app.include_router(rules.router, prefix="/rules", tags=["rules"])
-app.include_router(engine.router, prefix="/engine", tags=["engine"])
-app.include_router(admin.router, prefix="/admin", tags=["admin"])
-app.include_router(xml_parser.router, prefix="/parser", tags=["parser"])
-app.include_router(tax_simulation.router, prefix="/simulation", tags=["simulation"])
-app.include_router(workflows.router, prefix="/workflows", tags=["workflows"])
+app.include_router(auth_router, prefix="/auth", tags=["auth"])
+app.include_router(users_router, prefix="/users", tags=["users"])
+app.include_router(companies_router, prefix="/companies", tags=["companies"])
+app.include_router(rules_router, prefix="/rules", tags=["rules"])
+app.include_router(engine_router, prefix="/engine", tags=["engine"])
+app.include_router(admin_router, prefix="/admin", tags=["admin"])
+app.include_router(parser_router, prefix="/parser", tags=["parser"])
+app.include_router(simulation_router, prefix="/simulation", tags=["simulation"])
+app.include_router(workflows_router, prefix="/workflows", tags=["workflows"])
 
 
 @app.get("/")
 def root():
     return {"msg": "GTH FastAPI Backend POC"}
-

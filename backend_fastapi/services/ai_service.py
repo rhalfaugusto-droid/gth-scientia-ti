@@ -1,6 +1,10 @@
 import openai
 import os
-from dotenv import load_dotenv
+from backend_fastapi.services.xml_parser_service import parse_nfe_xml
+from backend_fastapi.services.tax_service import calculate_tax
+from backend_fastapi.dependencies import get_current_user
+from backend_fastapi import database
+from backend_fastapi.dotenv import load_dotenv
 
 load_dotenv()
 

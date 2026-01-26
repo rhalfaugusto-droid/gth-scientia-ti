@@ -2,8 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 from sqlalchemy.orm import Session
-import database, crud
-from dependencies import get_current_user
+from backend_fastapi.services.xml_parser_service import parse_nfe_xml
+from backend_fastapi.services.tax_service import calculate_tax
+from backend_fastapi.dependencies import get_current_user
+from backend_fastapi import database, crud
 
 router = APIRouter()
 
