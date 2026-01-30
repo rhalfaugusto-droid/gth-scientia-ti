@@ -1,0 +1,184 @@
+{
+  "info": {
+    "_postman_id": "9b41d2c0-1b22-4b55-a111-scientia-fastapi",
+    "name": "Scientia FastAPI - E2E Tests",
+    "description": "Fluxo completo automático de testes do backend no Render",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "{{base_url}}" },
+    { "key": "token", "value": "" },
+    { "key": "rule_id", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base_url}}/auth/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"teste@teste.com\",\n  \"password\": \"123456\",\n  \"name\": \"Rhalf\"\n}"
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "exec": [
+            "pm.test('Register OK', () => pm.response.to.have.status(200));"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base_url}}/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"teste@teste.com\",\n  \"password\": \"123456\"\n}"
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "exec": [
+            "pm.test('Login OK', () => pm.response.to.have.status(200));",
+            "const json = pm.response.json();",
+            "pm.collectionVariables.set('token', json.access_token);"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "Users - Me",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{base_url}}/users/me"
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "exec": [
+            "pm.test('Users/me OK', () => pm.response.to.have.status(200));"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "Company - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{base_url}}/companies/",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Empresa Teste\",\n  \"cnpj\": \"12345678000199\",\n  \"area\": \"Tecnologia\"\n}"
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "exec": [
+            "pm.test('Company OK', () => pm.response.to.have.status(200));"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "Rule - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{base_url}}/rules/",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Regra IBS\",\n  \"description\": \"Cálculo padrão\"\n}"
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "exec": [
+            "pm.test('Rule OK', () => pm.response.to.have.status(200));",
+            "const r = pm.response.json();",
+            "if(r.id) pm.collectionVariables.set('rule_id', r.id);"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "Engine - Run",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{base_url}}/engine/run",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"rule_version_id\": {{rule_id}},\n  \"input_data\": {\"value\": 1000}\n}"
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "exec": [
+            "pm.test('Engine run OK', () => pm.response.to.have.status(200));"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "Engine - Calculate Tax",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{base_url}}/engine/calculate_tax",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"operation_value\": 1000,\n  \"tax_regime_name\": \"Simples Nacional\"\n}"
+        }
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "exec": [
+            "pm.test('Tax calc OK', () => pm.response.to.have.status(200));"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "Simulation - Health",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/simulation/"
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "exec": [
+            "pm.test('Health OK', () => pm.response.to.have.status(200));"
+          ]
+        }
+      }]
+    }
+  ]
+}

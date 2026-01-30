@@ -11,6 +11,12 @@ from backend_fastapi.routers.xml_parser import router as parser_router
 from backend_fastapi.routers.tax_simulation import router as simulation_router
 from backend_fastapi.routers.workflows import router as workflows_router
 
+from backend_fastapi.database import Base, engine
+
+@app.on_event("startup")
+def startup():
+    Base.metadata.create_all(bind=engine)
+
 
 app = FastAPI(title="GTH FastAPI Backend POC")
 

@@ -1,0 +1,354 @@
+{
+  "info": {
+    "_postman_id": "31d0e949-f430-4a75-b601-f55969cf08c9",
+    "name": "Scientia FastAPI - E2E Tests",
+    "description": "Fluxo completo automático de testes do backend no Render",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth - Register",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Register OK', () => pm.response.to.have.status(200));"
+            ],
+            "type": "text/javascript",
+            "id": "9af1d31e-56a7-40af-8cc7-c4326176253d"
+          }
+        }
+      ],
+      "id": "eeaf0c2a-9782-4efd-a1ef-6556082d389d",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"teste@teste.com\",\n  \"password\": \"123456\",\n  \"name\": \"Rhalf\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/auth/register",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Auth - Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Login OK', () => pm.response.to.have.status(200));",
+              "const json = pm.response.json();",
+              "pm.collectionVariables.set('token', json.access_token);"
+            ],
+            "type": "text/javascript",
+            "id": "1dd5522c-127e-45a9-a4d9-dd0dc2a2c6b3"
+          }
+        }
+      ],
+      "id": "15ba53f6-1cc4-468c-90dd-5241c901b793",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"teste@teste.com\",\n  \"password\": \"123456\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/auth/login",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Users - Me",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Users/me OK', () => pm.response.to.have.status(200));"
+            ],
+            "type": "text/javascript",
+            "id": "5fab90ac-6aaa-459a-86ea-cc4bfc6ef66a"
+          }
+        }
+      ],
+      "id": "aa8757b8-dc12-4562-be35-ddebe2504419",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/users/me",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "users",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Company - Create",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Company OK', () => pm.response.to.have.status(200));"
+            ],
+            "type": "text/javascript",
+            "id": "24123614-430d-48d4-ab12-cdeb67e7185f"
+          }
+        }
+      ],
+      "id": "b20538b8-5450-4651-b51c-a58a7f3cc7f3",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Empresa Teste\",\n  \"cnpj\": \"12345678000199\",\n  \"area\": \"Tecnologia\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/companies/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "companies",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Rule - Create",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Rule OK', () => pm.response.to.have.status(200));",
+              "const r = pm.response.json();",
+              "if(r.id) pm.collectionVariables.set('rule_id', r.id);"
+            ],
+            "type": "text/javascript",
+            "id": "2a549f9f-aaeb-43b2-af69-7609272f1399"
+          }
+        }
+      ],
+      "id": "f4f1a9a4-202c-44c8-889c-d0f31390192c",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Regra IBS\",\n  \"description\": \"Cálculo padrão\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/rules/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "rules",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Engine - Run",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Engine run OK', () => pm.response.to.have.status(200));"
+            ],
+            "type": "text/javascript",
+            "id": "5a394af9-5f00-42d1-8bd2-030687b794ea"
+          }
+        }
+      ],
+      "id": "c03113f4-f637-4abf-80bb-60df08c9edfa",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"rule_version_id\": {{rule_id}},\n  \"input_data\": {\"value\": 1000}\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/engine/run",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "engine",
+            "run"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Engine - Calculate Tax",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Tax calc OK', () => pm.response.to.have.status(200));"
+            ],
+            "type": "text/javascript",
+            "id": "3fa4ebe0-0bb7-413e-a21d-07e045f30e69"
+          }
+        }
+      ],
+      "id": "99f7683c-3d27-4072-a7ab-34ffb121853a",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"operation_value\": 1000,\n  \"tax_regime_name\": \"Simples Nacional\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/engine/calculate_tax",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "engine",
+            "calculate_tax"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Simulation - Health",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Health OK', () => pm.response.to.have.status(200));"
+            ],
+            "type": "text/javascript",
+            "id": "a8224332-1532-433c-9f44-aa4312e60bea"
+          }
+        }
+      ],
+      "id": "6d790bc8-cd33-4c4c-97f4-7666a5a4ff6c",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/simulation/",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "simulation",
+            ""
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "id": "c16d3dc2-f2ec-4f19-a9e2-a99d7df128ae",
+      "key": "base_url",
+      "value": "{{base_url}}"
+    },
+    {
+      "id": "573c4952-92f4-44fc-9108-397adc37e701",
+      "key": "token",
+      "value": ""
+    },
+    {
+      "id": "37cf75eb-3037-4788-8b0e-66dfd036db32",
+      "key": "rule_id",
+      "value": "1"
+    }
+  ]
+}

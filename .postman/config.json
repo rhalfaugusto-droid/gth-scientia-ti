@@ -1,0 +1,16 @@
+{
+  "workspace": {
+    "id": "9ab748df-ea9a-4d67-8de2-ebd30e35455a"
+  },
+  "entities": {
+    "environments": [],
+    "flows": [],
+    "globals": [],
+    "mocks": [],
+    "specs": [
+      "..\\openapi.yaml",
+      "..\\backend_fastapi\\openapi.yaml"
+    ],
+    "collections": []
+  }
+}
