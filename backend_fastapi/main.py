@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend_fastapi.database import Base, engine
+from backend_fastapi import models
 
 from backend_fastapi.routers.auth import router as auth_router
 from backend_fastapi.routers.users import router as users_router
