@@ -63,3 +63,26 @@ class TaxRegimeOut(TaxRegimeBase):
     id: int
     class Config:
         orm_mode = True
+
+
+# =========================
+# AUTH SCHEMAS (ADICIONAR)
+# =========================
+
+class UserCreate(BaseModel):
+    name: str
+    email: str
+    password: str
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+
+
+
