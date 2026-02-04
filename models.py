@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, JSON, Boolean
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.orm import relationship
+from backend_fastapi.database import Base
 import datetime
 
-Base = declarative_base()
 
 class User(Base):
     __tablename__ = 'users'
