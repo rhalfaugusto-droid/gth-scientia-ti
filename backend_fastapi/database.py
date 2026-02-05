@@ -15,9 +15,12 @@ DATABASE_URL = os.getenv(
 
 engine = create_engine(
     DATABASE_URL,
-    echo=True,
-    future=True
+    future=True,
+    echo=False,
+    pool_pre_ping=True,
+    pool_recycle=300
 )
+
 
 SessionLocal = sessionmaker(
     autocommit=False,
