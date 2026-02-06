@@ -1,17 +1,5 @@
 services:
   - type: web
-<<<<<<< HEAD
-    name: tributario-backend
-    env: python
-    plan: starter
-    rootDir: backend_fastapi
-
-    buildCommand: |
-      poetry install --no-interaction --no-root
-
-    startCommand: |
-      poetry run uvicorn backend_fastapi.main:app --host 0.0.0.0 --port $PORT
-=======
     name: gth-backend
     env: python
     plan: free
@@ -20,12 +8,11 @@ services:
     rootDir: backend_fastapi
 
     buildCommand: |
-      python -V
-      poetry install --no-interaction --no-root
+      pip install -r requirements.txt
 
-    startCommand: poetry run uvicorn main:app --host 0.0.0.0 --port $PORT
->>>>>>> b4426ebe9640815e7e2839567f7f8258e97ac4b2
+    startCommand: |
+      uvicorn main:app --host 0.0.0.0 --port $PORT
 
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.9
+        value: 3.12.7
