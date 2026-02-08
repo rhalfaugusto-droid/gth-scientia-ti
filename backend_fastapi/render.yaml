@@ -1,20 +1,18 @@
-PYTHON_VERSION=3.11.9
-
 services:
   - type: web
     name: gth-backend
     env: python
-    plan: starter
+    plan: free
     branch: main
 
     rootDir: backend_fastapi
 
     buildCommand: |
-      python -V
-      poetry install --no-interaction --no-root
+      pip install -r requirements.txt
 
-    startCommand: poetry run uvicorn main:app --host 0.0.0.0 --port $PORT
+    startCommand: |
+      uvicorn main:app --host 0.0.0.0 --port $PORT
 
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.9
+        value: 3.12.7
