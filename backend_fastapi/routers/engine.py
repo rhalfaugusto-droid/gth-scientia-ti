@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 from datetime import datetime
+from typing import Dict, Any
 import ast
 import operator as op
 
@@ -9,6 +10,7 @@ from backend_fastapi import database, crud
 from backend_fastapi.dependencies import get_current_user
 from backend_fastapi.services.tax_service import calculate_tax
 from backend_fastapi.services.xml_parser_service import parse_nfe_xml
+
 
 router = APIRouter()
 
@@ -19,24 +21,24 @@ router = APIRouter()
 
 class EngineIn(BaseModel):
     rule_version_id: int
-    input_data: dict
+    input_data: Dict[str, Any]
 
 
 class EngineOut(BaseModel):
-    result: dict
-    evidence: dict
+    result: Dict[str, Any]
+    evidence: Dict[str, Any]
 
 
 class TaxCalculationIn(BaseModel):
     operation_value: float
     tax_regime_name: str
-    operation_date: datetime = datetime.now()
+    operation_date: datetime = Field(default_factory=datetime.utcnow)
 
 
 class TaxCalculationOut(BaseModel):
     total_tax: float
-    breakdown: dict
-    evidence: dict
+    breakdown: Dict[str, Any]
+    evidence: Dict[str, Any]
 
 
 # =========================
@@ -53,19 +55,29 @@ SAFE_OPERATORS = {
 }
 
 
-def eval_expr(expr: str, names: dict):
+def eval_expr(expr: str, names: Dict[str, Any]):
     node = ast.parse(expr, mode="eval").body
 
     def _eval(n):
         if isinstance(n, ast.Constant):
             return n.value
+
         if isinstance(n, ast.Name):
             return names.get(n.id, 0)
+
         if isinstance(n, ast.BinOp):
-            return SAFE_OPERATORS[type(n.op)](_eval(n.left), _eval(n.right))
+            operator_fn = SAFE_OPERATORS.get(type(n.op))
+            if not operator_fn:
+                raise ValueError("Operador não permitido")
+            return operator_fn(_eval(n.left), _eval(n.right))
+
         if isinstance(n, ast.UnaryOp):
-            return SAFE_OPERATORS[type(n.op)](_eval(n.operand))
-        raise ValueError(f"Unsupported expression: {type(n)}")
+            operator_fn = SAFE_OPERATORS.get(type(n.op))
+            if not operator_fn:
+                raise ValueError("Operador não permitido")
+            return operator_fn(_eval(n.operand))
+
+        raise ValueError(f"Expressão não suportada: {type(n).__name__}")
 
     return _eval(node)
 
@@ -94,8 +106,10 @@ def run_engine(
 
     try:
         result = eval_expr(expr, payload.input_data)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Evaluation error: {e}")
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception:
+        raise HTTPException(status_code=400, detail="Evaluation error")
 
     evidence = {
         "expr": expr,
@@ -122,8 +136,10 @@ def calculate_tax_endpoint(
             payload.tax_regime_name,
             payload.operation_date,
         )
+
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
     except Exception as e:
         raise HTTPException(
             status_code=500,
